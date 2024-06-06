@@ -1,0 +1,20 @@
+name: Dispatch Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'Enter your username'
+        required: true
+        default: ''
+      favorite_color:
+        description: 'Enter your favorite color'
+        required: true
+        default: ''
+
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo message
+        run: echo "${{ github.event.inputs.username }} says hello, and favorite color is ${{ github.event.inputs.favorite_color }}"
