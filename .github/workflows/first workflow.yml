@@ -1,6 +1,6 @@
 name: GitHub Actions Workflow
 on:
- workflow_dispatch:
+workflow_dispatch:
    inputs:
      username:
        description: 'Enter your username'
@@ -9,7 +9,7 @@ on:
        description: 'Enter your favorite color'
        required: true
 jobs:
- job1:
+job1:
    runs-on: ubuntu-latest
    steps:
    - name: Output Inputs
@@ -17,7 +17,7 @@ jobs:
      run: |
        echo "username=${{ github.event.inputs.username }}" >> $GITHUB_OUTPUT
        echo "favorite_color=${{ github.event.inputs.favorite_color }}" >> $GITHUB_OUTPUT
- job2:
+job2:
    needs: job1
    runs-on: ubuntu-latest
    steps:
@@ -26,7 +26,7 @@ jobs:
      run: |
        greeting="Hello, ${{ steps.input_values.outputs.username }}! Your favorite color is ${{ steps.input_values.outputs.favorite_color }}."
        echo "GREETING=$greeting" >> $GITHUB_OUTPUT
- job3:
+job3:
    needs: job2
    runs-on: ubuntu-latest
    steps:
