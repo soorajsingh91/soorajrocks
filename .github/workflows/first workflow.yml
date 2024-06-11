@@ -33,3 +33,7 @@ job3:
    - name: Echo Greeting
      run: |
        echo "${{ steps.greeting.outputs.GREETING }}"
+   steps:
+   - name: Echo Greeting
+     run: |
+       echo "${{ steps.greeting.outputs.GREETING }}"
