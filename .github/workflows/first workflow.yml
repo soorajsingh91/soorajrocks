@@ -1,25 +1,23 @@
-name: Dispatch Workflow
-
+name: GitHub Actions Workflow
 on:
-  workflow_dispatch:
-    inputs:
-      username:
-        description: 'Enter your username'
-        required: true
-        default: ''
-      favorite_color:
-        description: 'Enter your favorite color'
-        required: true
-        default: ''
-
+ workflow_dispatch:
+   inputs:
+     username:
+       description: 'Enter your username'
+       required: true
+     favorite_color:
+       description: 'Enter your favorite color'
+       required: true
 jobs:
-  say_hello:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo message
-        run: echo "${{ github.event.inputs.username }} says hello, and favorite color is ${{ github.event.inputs.favorite_color }}"
-
-job2:
+ job1:
+   runs-on: ubuntu-latest
+   steps:
+   - name: Output Inputs
+     id: input_values
+     run: |
+       echo "username=${{ github.event.inputs.username }}" >> $GITHUB_OUTPUT
+       echo "favorite_color=${{ github.event.inputs.favorite_color }}" >> $GITHUB_OUTPUT
+ job2:
    needs: job1
    runs-on: ubuntu-latest
    steps:
@@ -34,4 +32,4 @@ job2:
    steps:
    - name: Echo Greeting
      run: |
-       echo "${{ steps.greeting.outputs.GREETING }}"        
+       echo "${{ steps.greeting.outputs.GREETING }}"
