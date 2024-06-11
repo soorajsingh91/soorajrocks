@@ -18,3 +18,20 @@ jobs:
     steps:
       - name: Echo message
         run: echo "${{ github.event.inputs.username }} says hello, and favorite color is ${{ github.event.inputs.favorite_color }}"
+
+job2:
+   needs: job1
+   runs-on: ubuntu-latest
+   steps:
+   - name: Greeting Message
+     id: greeting
+     run: |
+       greeting="Hello, ${{ steps.input_values.outputs.username }}! Your favorite color is ${{ steps.input_values.outputs.favorite_color }}."
+       echo "GREETING=$greeting" >> $GITHUB_OUTPUT
+ job3:
+   needs: job2
+   runs-on: ubuntu-latest
+   steps:
+   - name: Echo Greeting
+     run: |
+       echo "${{ steps.greeting.outputs.GREETING }}"        
