@@ -1,39 +1,47 @@
-name: GitHub Actions Workflow
+name: Custom Workflow
+ 
 on:
-workflow_dispatch:
-   inputs:
-     username:
-       description: 'Enter your username'
-       required: true
-     favorite_color:
-       description: 'Enter your favorite color'
-       required: true
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'Username'
+        required: true
+        type: string
+      favorite_color:
+        description: 'Favorite Color'
+        required: true
+        type: string
+ 
 jobs:
-job1:
-   runs-on: ubuntu-latest
-   steps:
-   - name: Output Inputs
-     id: input_values
-     run: |
-       echo "username=${{ github.event.inputs.username }}" >> $GITHUB_OUTPUT
-       echo "favorite_color=${{ github.event.inputs.favorite_color }}" >> $GITHUB_OUTPUT
-job2:
-   needs: job1
-   runs-on: ubuntu-latest
-   steps:
-   - name: Greeting Message
-     id: greeting
-     run: |
-       greeting="Hello, ${{ steps.input_values.outputs.username }}! Your favorite color is ${{ steps.input_values.outputs.favorite_color }}."
-       echo "GREETING=$greeting" >> $GITHUB_OUTPUT
-job3:
-   needs: job2
-   runs-on: ubuntu-latest
-   steps:
-   - name: Echo Greeting
-     run: |
-       echo "${{ steps.greeting.outputs.GREETING }}"
-   steps:
-   - name: Echo Greeting
-     run: |
-       echo "${{ steps.greeting.outputs.GREETING }}"
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      username: ${{ steps.get-inputs.outputs.username }}
+      favorite_color: ${{ steps.get-inputs.outputs.favorite_color }}
+    steps:
+      - name: Get Inputs
+        id: get-inputs
+        run: |
+          echo "username=${{ github.event.inputs.username }}" >> $GITHUB_OUTPUT
+          echo "favorite_color=${{ github.event.inputs.favorite_color }}" >> $GITHUB_OUTPUT
+ 
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    outputs:
+      GREETING: ${{ steps.greet.outputs.GREETING }}
+    steps:
+      - name: Create Greeting
+        id: greet
+        run: |
+          USERNAME=${{ needs.job1.outputs.username }}
+          COLOR=${{ needs.job1.outputs.favorite_color }}
+          GREETING="Hello, $USERNAME! Your favorite color is $COLOR."
+          echo "GREETING=$GREETING" >> $GITHUB_OUTPUT
+ 
+  job3:
+    runs-on: ubuntu-latest
+    needs: job2
+    steps:
+      - name: Echo Greeting
+        run: echo "${{ needs.job2.outputs.GREETING }}"
